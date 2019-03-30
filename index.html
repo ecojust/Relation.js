@@ -25,17 +25,19 @@
 
 	setup();
 	function setup() {
-	    for (var i = 0; i < 10000; i++) {
+	    for (var i = 0; i < 10; i++) {
 	      var size = 48;
 	      var padding = 20;
 	      var config = {
 	      	width:size,
 	      	height:size,
 	      	x:(i%18)*(size+4) + padding,
-	      	y:~~(i/18)*(size+4) + padding
+	      	y:~~(i/18)*(size+4) + padding,
+	      	texture:'images/orange.png'
 	      };
-	      new PersonPanel().init(app,config);
-	      //console.log(instance);
+	      var a = new PersonPanel().init(app,config);
+	      console.log(a.getSprite());
+	      //a.moveTo(0,0);
 	    }
 	}
 </script>
