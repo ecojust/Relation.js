@@ -29,18 +29,21 @@
 	      var size = 64;
 	      var padding = 20;
 	      var config = {
-	      	// width:size,
-	      	// height:size,
-	      	// icon:{
-	      	// 	img:'images/man.png',
-	      	// 	offsetX:0,
-	      	// 	offsetY:-4
-	      	// },
+	      	width:size,
+	      	height:size,
+	      	icon:{
+	      		img:'images/man.png',
+	      		offsetX:0,
+	      		offsetY:-4
+	      	},
 	      	x:(i%18)*(size+4) + padding,
 	      	y:~~(i/18)*(size+4) + padding,
-	      	//frame:'images/circle.png'
+	      	frame:'images/circle.png'
 	      };
 	      var a = new PersonPanel().init(app,config);
+	      a.onClick(function(){
+	      	console.log(a);
+	      })
 	    }
 	}
 </script>

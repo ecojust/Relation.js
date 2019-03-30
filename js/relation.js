@@ -36,6 +36,8 @@ export function PersonPanel(){
 			y:(config.height||64)/2
 		}
 	    this[SPRITE] = new Container();
+	    
+	    
 	    /*外围环*/
 		var wrap = new Sprite.fromImage(config.frame||'images/circle.png');
 		this.setSize(wrap,size);
@@ -54,6 +56,10 @@ export function PersonPanel(){
 	    this[SPRITE].style = size;
 	    this[SPRITE].position = position;
 	    app.stage.addChild(that[SPRITE]);
+	    if(!window.stack){
+	    	window.stack = [];
+	    }
+	    window.stack.push(that);
         return this;
 	}
 	PersonPanel[INITCONFIG] = function(config){
@@ -92,6 +98,20 @@ export function PersonPanel(){
 			x:percent?(1-percent)*size.width/2+offset.x||0:0,
 			y:percent?(1-percent)*size.height/2+offset.y||0:0,
 		}
+	}
+	PersonPanel.onClick = function(callback){
+		var sprite = this.getSprite();
+		sprite.interactive = true;
+		sprite.mousedown = sprite.touchstart =function(data){
+            // stop the default event...
+            //data.originalEvent.preventDefault();
+            //this.data = data;
+            //this.alpha = 0.9;
+            //this.dragging = true;
+            //console.log(this);
+            callback();
+        }
+	
 	}
 	return PersonPanel;
 }
