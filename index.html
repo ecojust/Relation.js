@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>pixi</title>
+	<style>* {padding: 0; margin: 0}</style>
+</head>
+<body>
+</body>
+<!-- <canvas width="300" height="300"></canvas> -->
+<script src="./js/pixi.min.js"></script>
+
+
+<script type="module">
+	import { PersonPanel } from './js/expand.js'; 
+	//新建一个pixi的实例，并加以配置
+	let app = new PIXI.Application({width: 256, height: 256});
+	app.renderer.backgroundColor = 0x061639;
+	app.renderer.view.style.position = "absolute";
+	app.renderer.view.style.display = "block";
+	app.renderer.autoResize = true;
+	app.renderer.resize(window.innerWidth, window.innerHeight);
+	//将该实例append到页面中用于展示
+	document.body.appendChild(app.view);
+
+	setup();
+	function setup() {
+	    for (var i = 0; i < 10000; i++) {
+	      var size = 48;
+	      var padding = 20;
+	      var config = {
+	      	width:size,
+	      	height:size,
+	      	x:(i%18)*(size+4) + padding,
+	      	y:~~(i/18)*(size+4) + padding
+	      };
+	      new PersonPanel().init(app,config);
+	      //console.log(instance);
+	    }
+	}
+</script>
+</html>
