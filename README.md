@@ -12,5 +12,4 @@
 >
 ><font color=gray>2.PersonPanel的拖拽功能(默认关闭)以及自定义回调;</font>
 >
->3.
 
