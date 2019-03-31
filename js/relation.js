@@ -17,7 +17,7 @@ let Application = PIXI.Application,
 
 
 export function PersonPanel(){
-	const SPRITE = Symbol();
+	const PERSONPANEL = Symbol();
 	const INITCONFIG = Symbol();
 	var PersonPanel = {};
 	PersonPanel.init = function(app,config){
@@ -37,7 +37,7 @@ export function PersonPanel(){
 			x:(config.width||64)/2,
 			y:(config.height||64)/2
 		}
-	    this[SPRITE] = new Container();
+	    this[PERSONPANEL] = new Container();
 	    /*外围环*/
 		var wrap = new Sprite.fromImage(config.frame||'images/circle.png');
 		this.setSize(wrap,size);
@@ -50,10 +50,10 @@ export function PersonPanel(){
 	    this.setSize(icon,size,0.6,offset);
 
 
-	    this[SPRITE].addChild(wrap,icon);
-	    this[SPRITE].style = size;
-	    this[SPRITE].position = position;
-	    app.stage.addChild(that[SPRITE]);
+	    this[PERSONPANEL].addChild(wrap,icon);
+	    this[PERSONPANEL].style = size;
+	    this[PERSONPANEL].position = position;
+	    app.stage.addChild(that[PERSONPANEL]);
 	    if(config.openMove){
 			this.openMove = true;
 			this.mouseDown();
@@ -89,13 +89,13 @@ export function PersonPanel(){
       	};
 	    return config;
 	}
-	PersonPanel.getSprite = function(){
-		return this[SPRITE];
+	PersonPanel.getPersonPanel = function(){
+		return this[PERSONPANEL];
 	}
 	PersonPanel.moveTo = function(x,y){
 		var centerx = x-(this.size.width/2);
 		var centery = y-(this.size.height/2);
-		this.getSprite().position = {
+		this.getPersonPanel().position = {
 			x:centerx>0?(centerx>window.innerWidth-this.size.width?window.innerWidth-this.size.width:centerx):0,
 			y:centery>0?(centery>window.innerHeight-this.size.height?window.innerHeight-this.size.height:centery):0,
 		}
@@ -113,10 +113,10 @@ export function PersonPanel(){
 		}
 	}
 	PersonPanel.mouseDown = function(callback){
-		var sprite = this.getSprite();
-		sprite.interactive = true;
+		var personPanel = this.getPersonPanel();
+		personPanel.interactive = true;
 		if(this.openMove){
-			sprite.mousedown = sprite.touchstart =function(data){
+			personPanel.mousedown = personPanel.touchstart =function(data){
 				this.dragging = true;
 	            this.alpha = 0.6;
 	            if(callback){
@@ -126,9 +126,9 @@ export function PersonPanel(){
 		}
 	}
 	PersonPanel.mouseUp = function(callback){
-		var sprite = this.getSprite();
+		var personPanel = this.getPersonPanel();
 		if(this.openMove){
-			sprite.mouseup = sprite.mouseupoutside = sprite.touchend = function(data){
+			personPanel.mouseup = personPanel.mouseupoutside = personPanel.touchend = function(data){
 	            this.alpha = 1
 	            this.dragging = false;
 	            if(callback){
@@ -138,10 +138,10 @@ export function PersonPanel(){
 		}	
 	}
 	PersonPanel.mouseMove = function(callback){
-		var sprite = this.getSprite();
+		var personPanel = this.getPersonPanel();
 		var that = this;
 		if(this.openMove){
-			sprite.mousemove = sprite.touchmove = function(data){
+			personPanel.mousemove = personPanel.touchmove = function(data){
 	            if(this.dragging){
 	            	var evevt = event||window.event;
 	            	var x = event.clientX>0?event.clientX:0;
