@@ -13,6 +13,7 @@ let Application = PIXI.Application,
     Resources = PIXI.loader.resources,
     Sprite = PIXI.Sprite,
     Container = PIXI.Container,
+    Text = PIXI.Text,
     TextureCache = PIXI.utils.TextureCache;
 
 
@@ -31,12 +32,15 @@ export function PersonPanel(){
 			width:config.width||64,
 			height:config.height||64
 		}
-		this.size =size;
-		this.position = position;
 		var center = {
 			x:(config.width||64)/2,
 			y:(config.height||64)/2
 		}
+		this.size =size;
+		this.position = {
+			x:position.x+size.width/2,
+			y:position.y+size.height/2
+		};
 	    this[PERSONPANEL] = new Container();
 	    /*外围环*/
 		var wrap = new Sprite.fromImage(config.frame||'images/circle.png');
@@ -48,9 +52,15 @@ export function PersonPanel(){
 	    	y:config.icon.offsetY||0
 	    }
 	    this.setSize(icon,size,0.6,offset);
+	    /*文字*/
+	    var text = new Text( 
+		  "  桔子桑   ", 
+		  {font: "32px sans-serif", fill: "white"}
+		);
+		this.setSize(text,{width:size.width,height:size.height*0.2},0.9,{x:0,y:size.height-16})
 
 
-	    this[PERSONPANEL].addChild(wrap,icon);
+	    this[PERSONPANEL].addChild(wrap,icon,text);
 	    this[PERSONPANEL].style = size;
 	    this[PERSONPANEL].position = position;
 	    app.stage.addChild(that[PERSONPANEL]);
@@ -62,10 +72,14 @@ export function PersonPanel(){
 		}else{
 			this.openMove = false;
 		}
-	    if(!window.stack){
-	    	window.stack = [];
+	    if(!window.panel_stack){
+	    	window.panel_stack = [];
 	    }
-	    window.stack.push(that);
+	    if(!window.sprite_stack){
+	    	window.sprite_stack = [];
+	    }
+	    //window.sprite_stack.push(that[PERSONPANEL]);
+	    window.panel_stack.push(that);
         return this;
 	}
 	PersonPanel[INITCONFIG] = function(config){
@@ -95,14 +109,16 @@ export function PersonPanel(){
 	PersonPanel.moveTo = function(x,y){
 		var centerx = x-(this.size.width/2);
 		var centery = y-(this.size.height/2);
+		var innerx = centerx>0?(centerx>window.innerWidth-this.size.width?window.innerWidth-this.size.width:centerx):0;
+		var innery = centery>0?(centery>window.innerHeight-this.size.height?window.innerHeight-this.size.height:centery):0;
 		this.getPersonPanel().position = {
-			x:centerx>0?(centerx>window.innerWidth-this.size.width?window.innerWidth-this.size.width:centerx):0,
-			y:centery>0?(centery>window.innerHeight-this.size.height?window.innerHeight-this.size.height:centery):0,
+			x:innerx,
+			y:innery,
 		}
 		this.position = {
-			x:x,
-			y:y
-		}
+			x:innerx + this.size.width/2,
+			y:innery + this.size.height/2
+		};
 	}
 	PersonPanel.setSize = function(obj,size,percent,offset){
 		obj.width = size.width * (percent||1);
@@ -117,6 +133,8 @@ export function PersonPanel(){
 		personPanel.interactive = true;
 		if(this.openMove){
 			personPanel.mousedown = personPanel.touchstart =function(data){
+				this.scale.x = 3;
+				this.scale.y = 3;
 				this.dragging = true;
 	            this.alpha = 0.6;
 	            if(callback){
@@ -129,6 +147,8 @@ export function PersonPanel(){
 		var personPanel = this.getPersonPanel();
 		if(this.openMove){
 			personPanel.mouseup = personPanel.mouseupoutside = personPanel.touchend = function(data){
+				this.scale.x = 1;
+				this.scale.y = 1;
 	            this.alpha = 1
 	            this.dragging = false;
 	            if(callback){
@@ -156,5 +176,16 @@ export function PersonPanel(){
 		}
 	}
 	return PersonPanel;
+}
+
+export function RelationLine(app,pos1,pos2){
+	let line = new PIXI.Graphics();
+	line.lineStyle(1, 	'#4169E1', 1);
+	line.moveTo(0, 0);
+	line.lineTo(80, 50);
+	line.x = 32;
+	line.y = 32;
+	app.stage.addChild(line);
+	return line;
 }
 

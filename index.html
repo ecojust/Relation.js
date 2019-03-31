@@ -10,7 +10,7 @@
 
 <script src="./js/pixi.min.js"></script>
 <script type="module">
-	import { PersonPanel } from './js/relation.js'; 
+	import { PersonPanel,RelationLine } from './js/relation.js'; 
 	//新建一个pixi的实例，并加以配置
 	let app = new PIXI.Application({width: 256, height: 256});
 	app.renderer.backgroundColor = 0x061639;
@@ -20,6 +20,17 @@
 	app.renderer.resize(window.innerWidth, window.innerHeight);
 	//将该实例append到页面中用于展示
 	document.body.appendChild(app.view);
+
+
+
+// 	var sprites = new PIXI.particles.ParticleContainer(10000, {
+// 	scale: true,
+// 	position: true,
+// 	rotation: true,
+// 	uvs: true,
+// 	alpha: true
+// });
+// app.stage.addChild(sprites);
 
 	setup();
 	function setup() {
@@ -40,13 +51,24 @@
 			      	frame:'images/circle.png',
 			      	openMove:true
 			    };
+			    if(i>50){
+			    	config.icon.img = "images/gaki.jpg"
+			    }
 			    var a = new PersonPanel().init(app,config);
-			    //a.mouseDown();
-			    //a.mouseUp();
+			    // a.mouseDown();
+			    // a.mouseUp();
 			    a.mouseMove(function(){
-			    	console.log('第'+(i+1)+'个PersonPanel正在被移动，当前位置为{x:'+window.stack[i].position.x+',y:'+window.stack[i].position.y+'}');
+			    	console.log('第'+(i+1)+'个PersonPanel正在被移动，当前位置为{x:'+window.panel_stack[i].position.x+',y:'+window.panel_stack[i].position.y+'}');
 			    });
 	    	})(i)
+	    }
+
+	    //render();
+	    new RelationLine(app);
+	}
+	function render(){
+		for (var i = 0; i < window.sprite_stack.length; i++) {
+	    	app.stage.addChild(window.sprite_stack[i]);
 	    }
 	}
 </script>
