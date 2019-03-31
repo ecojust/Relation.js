@@ -6,11 +6,10 @@
 
 目前实现功能如下：
 
-<font color=gray>
 
->1.通过用户配置生成PersonPanel容器(人物面板);
+
+><font color=gray>1.通过用户配置生成PersonPanel容器(人物面板);</font>
 >
->2.PersonPanel的拖拽功能(默认关闭)以及自定义回调;
+><font color=gray>2.PersonPanel的拖拽功能(默认关闭)以及自定义回调;</font>
 >3.
 
-</font>
