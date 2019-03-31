@@ -31,13 +31,13 @@ export function PersonPanel(){
 			width:config.width||64,
 			height:config.height||64
 		}
+		this.size =size;
+		this.position = position;
 		var center = {
 			x:(config.width||64)/2,
 			y:(config.height||64)/2
 		}
 	    this[SPRITE] = new Container();
-	    
-	    
 	    /*外围环*/
 		var wrap = new Sprite.fromImage(config.frame||'images/circle.png');
 		this.setSize(wrap,size);
@@ -51,11 +51,17 @@ export function PersonPanel(){
 
 
 	    this[SPRITE].addChild(wrap,icon);
-
-
 	    this[SPRITE].style = size;
 	    this[SPRITE].position = position;
 	    app.stage.addChild(that[SPRITE]);
+	    if(config.openMove){
+			this.openMove = true;
+			this.mouseDown();
+			this.mouseUp();
+			this.mouseMove();
+		}else{
+			this.openMove = false;
+		}
 	    if(!window.stack){
 	    	window.stack = [];
 	    }
@@ -73,7 +79,8 @@ export function PersonPanel(){
 	      	},
 	      	x:null,
 	      	y:null,
-	      	texture:null
+	      	texture:null,
+	      	openMove:false
 		};
 		config.icon = config.icon?config.icon:{
       		img:null,
@@ -86,7 +93,13 @@ export function PersonPanel(){
 		return this[SPRITE];
 	}
 	PersonPanel.moveTo = function(x,y){
+		var centerx = x-(this.size.width/2);
+		var centery = y-(this.size.height/2);
 		this.getSprite().position = {
+			x:centerx>0?(centerx>window.innerWidth-this.size.width?window.innerWidth-this.size.width:centerx):0,
+			y:centery>0?(centery>window.innerHeight-this.size.height?window.innerHeight-this.size.height:centery):0,
+		}
+		this.position = {
 			x:x,
 			y:y
 		}
@@ -99,19 +112,48 @@ export function PersonPanel(){
 			y:percent?(1-percent)*size.height/2+offset.y||0:0,
 		}
 	}
-	PersonPanel.onClick = function(callback){
+	PersonPanel.mouseDown = function(callback){
 		var sprite = this.getSprite();
 		sprite.interactive = true;
-		sprite.mousedown = sprite.touchstart =function(data){
-            // stop the default event...
-            //data.originalEvent.preventDefault();
-            //this.data = data;
-            //this.alpha = 0.9;
-            //this.dragging = true;
-            //console.log(this);
-            callback();
-        }
-	
+		if(this.openMove){
+			sprite.mousedown = sprite.touchstart =function(data){
+				this.dragging = true;
+	            this.alpha = 0.6;
+	            if(callback){
+	            	callback();
+	            }
+	        }
+		}
+	}
+	PersonPanel.mouseUp = function(callback){
+		var sprite = this.getSprite();
+		if(this.openMove){
+			sprite.mouseup = sprite.mouseupoutside = sprite.touchend = function(data){
+	            this.alpha = 1
+	            this.dragging = false;
+	            if(callback){
+	            	callback();
+	            }
+	        };
+		}	
+	}
+	PersonPanel.mouseMove = function(callback){
+		var sprite = this.getSprite();
+		var that = this;
+		if(this.openMove){
+			sprite.mousemove = sprite.touchmove = function(data){
+	            if(this.dragging){
+	            	var evevt = event||window.event;
+	            	var x = event.clientX>0?event.clientX:0;
+	            	var y = event.clientY>0?event.clientY:0;
+	            	that.moveTo(x,y);
+	                //console.log(that.position);
+	                if(callback){
+		            	callback();
+		            }
+	            }
+	        }
+		}
 	}
 	return PersonPanel;
 }
